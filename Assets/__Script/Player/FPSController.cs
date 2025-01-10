@@ -180,5 +180,18 @@ public class FPSController : MonoBehaviour
         zoomRoutine = null;
         
     }
-   
+    public void EnablePlayer()
+    {
+        CanMove = true; // Allow movement
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void DisablePlayer()
+    {
+        CanMove = false; // Disable movement
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
 }

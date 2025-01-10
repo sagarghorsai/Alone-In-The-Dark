@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
-public class ItemPickUp : MonoBehaviour, IInteractable
+public class PickUp : MonoBehaviour, IInteractable
 {
     public InteractType interactType;
     string txt = "";
