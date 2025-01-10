@@ -38,19 +38,11 @@ public class FPSController : MonoBehaviour
     private float timer;
 
 
- 
-
-
-
-
-
     [Header("Look Parameters")]
     [SerializeField, Range(1, 10)] private float lookSpdX = 2.0f;
     [SerializeField, Range(1, 10)] private float lookSpdY = 2.0f;
     [SerializeField, Range(1, 100)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(1, 100)] private float lowerLookLimit = 80.0f;
-
-
 
     
     private Camera playerCam;

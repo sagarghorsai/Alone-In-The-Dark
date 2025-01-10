@@ -4,6 +4,9 @@ public class Door : MonoBehaviour, IInteractable
 {
     private Animator animator;
     public bool isOpen = false;
+    public InteractType interactType; // Set this in the Inspector for each object
+
+    string txt = "";
 
     private void Start()
     {
@@ -12,12 +15,18 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        isOpen = !isOpen; // Toggle the isOpen state
-        animator.SetBool("Open", isOpen); // Update the animator parameter
+        isOpen = !isOpen; // Toggle the state of the door
+        animator.SetBool("Open", isOpen);
     }
 
     public string GetInteractionText()
     {
-        return "Press E to Open/Close Door";
+        txt = isOpen ? "Close" : "Open";
+        return interactType == InteractType.Hold ? $"{txt} Door" : $"{txt} Door";
+    }
+
+    public InteractType GetInteractType()
+    {
+        return interactType; // Return the interact type for this object
     }
 }

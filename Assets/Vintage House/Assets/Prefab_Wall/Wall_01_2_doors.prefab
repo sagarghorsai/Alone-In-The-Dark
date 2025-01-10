@@ -227,6 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOpen: 0
+  interactType: 1
 --- !u!95 &9169898361277889140
 Animator:
   serializedVersion: 5
