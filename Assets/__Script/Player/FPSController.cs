@@ -33,6 +33,8 @@ public class FPSController : MonoBehaviour
     [SerializeField] private float sprintBobSpeed = 18f;
     [SerializeField] private float sprintBobAmount = 0.1f;
 
+    public bool isHiding;
+
 
     private float defaultYPos = 0f;
     private float timer;
@@ -44,13 +46,13 @@ public class FPSController : MonoBehaviour
     [SerializeField, Range(1, 100)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(1, 100)] private float lowerLookLimit = 80.0f;
 
-    
     private Camera playerCam;
     private CharacterController characterController;
     private Vector3 moveDirection;
     private Vector2 currentInput;
 
     private float rotationX =0;
+
 
     private void Awake()
     {
@@ -66,6 +68,8 @@ public class FPSController : MonoBehaviour
 
     private void Update()
     {
+      
+
         if (CanMove)
         {
             HandleMovementInput();
@@ -190,8 +194,8 @@ public class FPSController : MonoBehaviour
     public void DisablePlayer()
     {
         CanMove = false; // Disable movement
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
 }

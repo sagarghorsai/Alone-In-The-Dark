@@ -1,0 +1,99 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AudioManager : MonoBehaviour
+{
+    public static AudioManager Instance;
+
+    [Header("---------- Audio Sources ----------")]
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioSource mainMenuSource;
+
+    [Header("---------- Background Music ----------")]
+    public AudioClipInfo[] backgroundList;
+
+    [Header("---------- Audio Clips ----------")]
+    public AudioClipInfo[] audioList;
+
+    private void Awake()
+    {
+        // Singleton pattern to ensure only one instance exists
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        // Start playing the first background track
+        if (backgroundList.Length > 0)
+        {
+            musicSource.clip = backgroundList[0].clip;
+            musicSource.Play();
+        }
+    }
+
+    public void PlayMusic(string audioName)
+    {
+        foreach (AudioClipInfo audioInfo in backgroundList)
+        {
+            if (audioInfo.name == audioName)
+            {
+                musicSource.clip = audioInfo.clip;
+                musicSource.Play();
+                Debug.Log($"Playing music: {audioInfo.name}");
+                return;
+            }
+        }
+        Debug.LogWarning($"Music clip '{audioName}' not found.");
+    }
+
+    public void PlaySFX(string audioName)
+    {
+        foreach (AudioClipInfo audioInfo in audioList)
+        {
+            if (audioInfo.name == audioName)
+            {
+                sfxSource.PlayOneShot(audioInfo.clip);
+                return;
+            }
+        }
+        Debug.LogWarning($"SFX clip '{audioName}' not found.");
+    }
+
+    public void PlayMainMenuAudio(string audioName)
+    {
+        foreach (AudioClipInfo audioInfo in audioList)
+        {
+            if (audioInfo.name == audioName)
+            {
+                mainMenuSource.clip = audioInfo.clip;
+                mainMenuSource.Play();
+                return;
+            }
+        }
+        Debug.LogWarning($"Main Menu audio clip '{audioName}' not found.");
+    }
+
+    public void StopAllAudio()
+    {
+        musicSource.Stop();
+        sfxSource.Stop();
+        mainMenuSource.Stop();
+    }
+}
+
+[System.Serializable]
+public class AudioClipInfo
+{
+    public string name; // Word associated with the audio clip
+    public AudioClip clip; // The audio clip
+}

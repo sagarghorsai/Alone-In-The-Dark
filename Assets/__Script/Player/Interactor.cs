@@ -4,13 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public interface IInteractable
 {
     void Interact();
     string GetInteractionText(); // Returns the interaction text for this object
     InteractType GetInteractType(); // New method to return the interaction type
-
 }
 
 public enum InteractType
@@ -18,8 +16,6 @@ public enum InteractType
     Click,
     Hold
 }
-
-
 
 public class Interactor : MonoBehaviour
 {
@@ -31,20 +27,36 @@ public class Interactor : MonoBehaviour
     public GameObject InteractorKey;
 
     private float holdTimer = 0f; // Timer for hold interaction
+    private bool isHiding = false; // Track if the player is hiding
 
     private void Start()
     {
         InteractorKey.SetActive(false);
+        InteractionText.gameObject.SetActive(false);
     }
-
 
     private void Update()
     {
+        if (isHiding)
+        {
+            InteractionText.text = "Exit"; // Update text while hiding
+            InteractionText.gameObject.SetActive(true);
+            InteractorKey.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                // Exit hiding logic will be handled by the Hide script
+                isHiding = false;
+                InteractionText.gameObject.SetActive(false);
+                InteractorKey.SetActive(false);
+            }
+            return;
+        }
+
         Ray ray = new Ray(InteractorSource.position, InteractorSource.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, InteractRange))
         {
-
             if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
             {
                 // Display interaction text
@@ -58,6 +70,12 @@ public class Interactor : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.E)) // Click interaction
                     {
                         interactObj.Interact();
+
+                        // Check if the interaction is hiding
+                        if (interactObj is Hide hideInteract && hideInteract.IsHiding())
+                        {
+                            isHiding = true;
+                        }
                     }
                 }
                 else if (interactObj.GetInteractType() == InteractType.Hold)
@@ -75,6 +93,12 @@ public class Interactor : MonoBehaviour
                             interactObj.Interact(); // Trigger interaction
                             holdTimer = 0f; // Reset the timer after interacting
                             holdProgressBar.fillAmount = 0f; // Reset progress bar
+
+                            // Check if the interaction is hiding
+                            if (interactObj is Hide hideInteract && hideInteract.IsHiding())
+                            {
+                                isHiding = true;
+                            }
                         }
                     }
                     else
@@ -87,16 +111,19 @@ public class Interactor : MonoBehaviour
             }
             else
             {
-                InteractorKey.SetActive(false);
-                InteractionText.gameObject.SetActive(false);
-                holdProgressBar.fillAmount = 0f; // Reset progress bar when not looking at interactable object
+                ResetInteractionUI();
             }
         }
         else
         {
-            InteractorKey.SetActive(false);
-            InteractionText.gameObject.SetActive(false);
-            holdProgressBar.fillAmount = 0f; // Reset progress bar if no object is hit
+            ResetInteractionUI();
         }
+    }
+
+    private void ResetInteractionUI()
+    {
+        InteractorKey.SetActive(false);
+        InteractionText.gameObject.SetActive(false);
+        holdProgressBar.fillAmount = 0f; // Reset progress bar when not looking at an interactable object
     }
 }
