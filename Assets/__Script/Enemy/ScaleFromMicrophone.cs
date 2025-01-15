@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ScaleFromMicrophone : MonoBehaviour
 {
@@ -13,7 +14,11 @@ public class ScaleFromMicrophone : MonoBehaviour
     public float threshold = 0.1f;
     public float smoothTime = 0.2f; // Smoothing time for scale changes
 
-    private Vector3 currentVelocity;
+    public float loudness;
+
+    public Image image;
+
+    private Vector3 currentVelocty;
 
     private void Update()
     {
@@ -23,16 +28,18 @@ public class ScaleFromMicrophone : MonoBehaviour
             return;
         }
 
-        float loudness = detector.GetLoudnessFromMicrophone() * loudnessSensiblity;
+        loudness = detector.GetLoudnessFromMicrophone() * loudnessSensiblity;
 
         if (loudness < threshold)
             loudness = 0;
 
         loudness = Mathf.Clamp01(loudness);
 
+        image.fillAmount = loudness;
+
         Debug.Log($"Loudness: {loudness}");
 
         // Smoothly scale the object based on loudness
-        transform.localScale = Vector3.SmoothDamp(transform.localScale, Vector3.Lerp(minScale, maxScale, loudness), ref currentVelocity, smoothTime);
+        //transform.localScale = Vector3.SmoothDamp(transform.localScale, Vector3.Lerp(minScale, maxScale, loudness), ref currentVelocity, smoothTime);
     }
 }

@@ -23,7 +23,7 @@ public class EnemyAI : MonoBehaviour
     [Header("Audio Detection")]
     public float detectionInterval = 0.1f;
     private float detectionTimer;
-    public AudioLoudnessDetection audioDetector;
+    public ScaleFromMicrophone scaleFromMicrophone;
     public float loudnessSensitivity = 100f;
     public float hauntThreshold = 0.2f;
     public float calmDownThreshold = 0.1f;
@@ -46,15 +46,7 @@ public class EnemyAI : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        // Initialize audio detection
-        if (audioDetector == null)
-        {
-            audioDetector = GetComponent<AudioLoudnessDetection>();
-        }
-        if (audioDetector == null)
-        {
-            audioDetector = gameObject.AddComponent<AudioLoudnessDetection>();
-        }
+        
 
         navMeshAgent.speed = patrolSpeed;
         SetRandomDestination();
@@ -84,16 +76,15 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
 
-        UpdateScaleFromLoudness();
         UpdateAnimator();
     }
 
     void UpdateLoudness()
     {
-        if (audioDetector == null || playerObj.transform == null) return;
+        if (scaleFromMicrophone == null || playerObj.transform == null) return;
 
         // Get base loudness
-        float baseLoudness = audioDetector.GetLoudnessFromMicrophone() * loudnessSensitivity;
+        float baseLoudness = scaleFromMicrophone.loudness * loudnessSensitivity;
 
         // Calculate distance factor
         float distanceToPlayer = Vector3.Distance(transform.position, playerObj.transform.position);
@@ -223,11 +214,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    void UpdateScaleFromLoudness()
-    {
-        float scaleLerp = Mathf.Clamp01(loudness / hauntThreshold);
-        transform.localScale = Vector3.Lerp(minScale, maxScale, scaleLerp);
-    }
+  
 
     void UpdateAnimator()
     {
