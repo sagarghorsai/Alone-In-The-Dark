@@ -72,12 +72,13 @@ public class Hide : MonoBehaviour, IInteractable
         currentRotation.x -= mouseY;
         currentRotation.y += mouseX;
 
-        // Clamp the vertical rotation to prevent flipping
-        currentRotation.x = Mathf.Clamp(currentRotation.x, -90f, 90f);
+        // Clamp the vertical rotation to prevent flipping or looking too far down
+        currentRotation.x = Mathf.Clamp(currentRotation.x, -45f, 90f); // Adjust -45f to allow limited downward view
 
         // Apply the rotation to the camera
         mainCamera.transform.localEulerAngles = new Vector3(currentRotation.x, currentRotation.y, 0f);
     }
+
 
 
     private System.Collections.IEnumerator SmoothTransition(bool hiding)

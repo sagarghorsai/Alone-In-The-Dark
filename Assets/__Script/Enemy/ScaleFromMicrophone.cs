@@ -37,7 +37,6 @@ public class ScaleFromMicrophone : MonoBehaviour
 
         image.fillAmount = loudness;
 
-        Debug.Log($"Loudness: {loudness}");
 
         // Smoothly scale the object based on loudness
         //transform.localScale = Vector3.SmoothDamp(transform.localScale, Vector3.Lerp(minScale, maxScale, loudness), ref currentVelocity, smoothTime);
