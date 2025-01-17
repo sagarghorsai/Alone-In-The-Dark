@@ -14,8 +14,9 @@ public class Hide : MonoBehaviour, IInteractable
     private Vector3 originalCameraPosition;
     private Quaternion originalCameraRotation;
     public float rotationSpeed = 5f;
+    public GameObject inventory;
+    public GameObject arms;
 
-    public GameObject interactor;
     private Vector2 currentRotation; // Stores the current rotation of the camera
 
     public string GetInteractionText()
@@ -60,6 +61,10 @@ public class Hide : MonoBehaviour, IInteractable
         {
             LookAround();
         }
+
+        playerController.HandleArmsAndInventoryVisibility(isHiding);
+
+
     }
 
     private void LookAround()

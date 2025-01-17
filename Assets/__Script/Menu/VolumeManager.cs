@@ -19,7 +19,6 @@ public class VolumeManager : MonoBehaviour
     public Slider masterSlider;
     public Slider sfxSlider;
     public Slider musicSlider;
-    public Slider mainMenuSlider;
 
     private void Awake()
     {
@@ -81,11 +80,7 @@ public class VolumeManager : MonoBehaviour
             musicSlider.onValueChanged.AddListener((value) => SetVolume(musicVolumeParam, value));
         }
 
-        if (mainMenuSlider != null)
-        {
-            mainMenuSlider.value = GetVolume(mainMenuVolumeParam);
-            mainMenuSlider.onValueChanged.AddListener((value) => SetVolume(mainMenuVolumeParam, value));
-        }
+     
     }
 
     // Retrieve the volume from the mixer as a linear value (0 to 1)

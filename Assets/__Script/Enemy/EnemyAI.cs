@@ -38,15 +38,14 @@ public class EnemyAI : MonoBehaviour
     public Vector3 maxScale = new Vector3(3, 3, 3);
 
     private Animator animator;
-    private FPSController playerContorller;
+    private FPSController playerController;
 
     void Start()
     {
         currentState = State.Patrol;
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-
-        
+        playerController = playerObj.GetComponent<FPSController>();
 
         navMeshAgent.speed = patrolSpeed;
         SetRandomDestination();
@@ -82,6 +81,13 @@ public class EnemyAI : MonoBehaviour
     void UpdateLoudness()
     {
         if (scaleFromMicrophone == null || playerObj.transform == null) return;
+
+        // Ignore loudness if the player is hiding
+        if (playerController != null && playerController.isHiding)
+        {
+            loudness = 0f; // Treat as no sound
+            return;
+        }
 
         // Get base loudness
         float baseLoudness = scaleFromMicrophone.loudness * loudnessSensitivity;
@@ -136,21 +142,19 @@ public class EnemyAI : MonoBehaviour
 
             if (navMeshAgent.remainingDistance < 0.5f && !navMeshAgent.pathPending)
             {
-                currentState = State.Patrol;
-                navMeshAgent.speed = patrolSpeed;
-                SetRandomDestination();
+                StartCoroutine(TransitionState(State.Patrol, 2f)); // Smooth transition
             }
         }
 
-        if (loudness < calmDownThreshold)
+        // Check calm down
+        if (playerController.isHiding || loudness < calmDownThreshold)
         {
             calmDownTimer += Time.deltaTime;
+
             if (calmDownTimer >= calmDownDuration)
             {
                 calmDownTimer = 0f;
-                currentState = State.Patrol;
-                navMeshAgent.speed = patrolSpeed;
-                SetRandomDestination();
+                StartCoroutine(TransitionState(State.Patrol, 1f)); // Gradual transition
             }
         }
         else
@@ -164,12 +168,18 @@ public class EnemyAI : MonoBehaviour
         bool playerInSight = IsPlayerVisible();
         bool soundTrigger = loudness >= hauntThreshold;
 
+        // Ignore sound triggers if the player is hiding
+        if (playerController != null && playerController.isHiding)
+        {
+            soundTrigger = false;
+        }
+
         if (soundTrigger || playerInSight)
         {
-            currentState = State.Haunt;
-            navMeshAgent.speed = hauntSpeed;
+            StopAllCoroutines(); // Stop any ongoing transitions
+            StartCoroutine(TransitionState(State.Haunt, 0.5f)); // Smoothly enter haunt state
 
-            if (!playerInSight && soundTrigger)
+            if (soundTrigger && !playerInSight)
             {
                 lastKnownPosition = playerObj.transform.position;
                 Debug.Log("Following sound to player position!");
@@ -192,9 +202,9 @@ public class EnemyAI : MonoBehaviour
         if (distanceToPlayer > sightRange)
             return false;
 
-        if (Physics.Raycast(transform.position, directionToPlayer.normalized, out RaycastHit hit, sightRange) && !playerContorller.isHiding)
+        if (Physics.Raycast(transform.position, directionToPlayer.normalized, out RaycastHit hit, sightRange))
         {
-            if (hit.transform == playerObj.transform)
+            if (hit.transform == playerObj.transform && !playerController.isHiding)
             {
                 Debug.DrawLine(transform.position, playerObj.transform.position, Color.red);
                 return true;
@@ -214,8 +224,6 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-  
-
     void UpdateAnimator()
     {
         if (animator != null)
@@ -224,6 +232,12 @@ public class EnemyAI : MonoBehaviour
             animator.SetBool("IsPatrolling", currentState == State.Patrol);
             animator.SetBool("IsHaunting", currentState == State.Haunt);
         }
+    }
+
+    private System.Collections.IEnumerator TransitionState(State newState, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        currentState = newState;
     }
 
     private void OnDrawGizmosSelected()

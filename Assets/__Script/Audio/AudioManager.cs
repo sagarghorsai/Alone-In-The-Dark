@@ -9,7 +9,6 @@ public class AudioManager : MonoBehaviour
     [Header("---------- Audio Sources ----------")]
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
-    [SerializeField] private AudioSource mainMenuSource;
 
     [Header("---------- Background Music ----------")]
     public AudioClipInfo[] backgroundList;
@@ -37,7 +36,7 @@ public class AudioManager : MonoBehaviour
         if (backgroundList.Length > 0)
         {
             musicSource.clip = backgroundList[0].clip;
-            musicSource.Play();
+          //  musicSource.Play();
         }
     }
 
@@ -56,38 +55,27 @@ public class AudioManager : MonoBehaviour
         Debug.LogWarning($"Music clip '{audioName}' not found.");
     }
 
-    public void PlaySFX(string audioName)
+    public void PlaySFX(string audioName, float playbackSpeed = 1f)
     {
         foreach (AudioClipInfo audioInfo in audioList)
         {
             if (audioInfo.name == audioName)
             {
+                sfxSource.pitch = playbackSpeed; // Adjust the playback speed
                 sfxSource.PlayOneShot(audioInfo.clip);
+                sfxSource.pitch = 1f; // Reset pitch to default after playing
                 return;
             }
         }
         Debug.LogWarning($"SFX clip '{audioName}' not found.");
     }
 
-    public void PlayMainMenuAudio(string audioName)
-    {
-        foreach (AudioClipInfo audioInfo in audioList)
-        {
-            if (audioInfo.name == audioName)
-            {
-                mainMenuSource.clip = audioInfo.clip;
-                mainMenuSource.Play();
-                return;
-            }
-        }
-        Debug.LogWarning($"Main Menu audio clip '{audioName}' not found.");
-    }
+
 
     public void StopAllAudio()
     {
         musicSource.Stop();
         sfxSource.Stop();
-        mainMenuSource.Stop();
     }
 }
 

@@ -30,8 +30,6 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
-  - guid: 9780ca28d040a2140a71fe988e3c10b2
-    name: MainMenuVolume
   - guid: 23fc7baf8a389e94984ec6434794e226
     name: MasterVolume
   - guid: 8c880dbfb2d5c264e949e42580081555
@@ -43,7 +41,6 @@ AudioMixerController:
     - a76bb44c546c04444b25a7d77263be04
     - fdfe2765ba02154449495175e5eb1462
     - 693c327e8f012d94c8996c957510c5d7
-    - ec5b417751eb1614fa5900c906c1ec72
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -59,7 +56,6 @@ AudioMixerGroupController:
   m_Children:
   - {fileID: 451606375514506970}
   - {fileID: 5733806400537876657}
-  - {fileID: 7001350004623798344}
   m_Volume: 23fc7baf8a389e94984ec6434794e226
   m_Pitch: 4b465d080f9456448bb0c0087a1ad549
   m_Send: 00000000000000000000000000000000
@@ -127,20 +123,6 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
---- !u!244 &3521482147466395917
-AudioMixerEffectController:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_EffectID: 06904bd03492ef546b5da1019c6214e5
-  m_EffectName: Attenuation
-  m_MixLevel: 1e68131f623a03c4ba1cd99600d47fb2
-  m_Parameters: []
-  m_SendTarget: {fileID: 0}
-  m_EnableWetMix: 0
-  m_Bypass: 0
 --- !u!243 &5733806400537876657
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -157,25 +139,6 @@ AudioMixerGroupController:
   m_Effects:
   - {fileID: 1312779581371016243}
   m_UserColorIndex: 3
-  m_Mute: 0
-  m_Solo: 0
-  m_BypassEffects: 0
---- !u!243 &7001350004623798344
-AudioMixerGroupController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: MainMenu
-  m_AudioMixer: {fileID: 24100000}
-  m_GroupID: ec5b417751eb1614fa5900c906c1ec72
-  m_Children: []
-  m_Volume: 9780ca28d040a2140a71fe988e3c10b2
-  m_Pitch: 3ec647b312fa9b2439ba174945856ac0
-  m_Send: 00000000000000000000000000000000
-  m_Effects:
-  - {fileID: 3521482147466395917}
-  m_UserColorIndex: 4
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
