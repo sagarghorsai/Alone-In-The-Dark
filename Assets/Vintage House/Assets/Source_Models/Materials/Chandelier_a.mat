@@ -26,6 +26,7 @@ Material:
   m_CustomRenderQueue: 2225
   stringTagMap: {}
   disabledShaderPasses:
+  - DistortionVectors
   - TransparentBackface
   m_LockedProperties: 
   m_SavedProperties:
@@ -116,6 +117,8 @@ Material:
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 1
     - _DetailNormalMapScale: 1
+    - _DistortionEnable: 0
+    - _DistortionOnly: 0
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
@@ -151,10 +154,10 @@ Material:
     - _SurfaceType: 0
     - _TransAmbient: 0
     - _TransDirect: 1
-    - _TransNormalDistortion: 0.119
+    - _TransNormalDistortion: 0
     - _TransScattering: 1.6
     - _TransShadow: 1
-    - _Translucency: 16.3
+    - _Translucency: 9.4
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentSortPriority: 0
@@ -169,8 +172,9 @@ Material:
     - __dirty: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color0: {r: 0.26470584, g: 0.21215388, b: 0.21215388, a: 0}
+    - _Color0: {r: 0.2647059, g: 0.21215399, b: 0.21215399, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Tint: {r: 0.8308824, g: 0.8308824, b: 0.8308824, a: 0}
+    - _UnlitColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
