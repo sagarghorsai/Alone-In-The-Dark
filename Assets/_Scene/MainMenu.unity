@@ -10263,13 +10263,23 @@ MonoBehaviour:
   sfxSource: {fileID: 1315854979}
   backgroundList:
   - name: Menu
-    clip: {fileID: 8300000, guid: 859a098db218c4145ab9475b4284e92e, type: 3}
+    clip: {fileID: 8300000, guid: 7ec42203487d10a4e84147f8f71604d1, type: 3}
   audioList:
   - name: PlayerWalkInGrass
     clip: {fileID: 8300000, guid: 35b1be21690c1084db6bba381ff60129, type: 3}
-  - name: PlayerWalkInWood
+  - name: WoodStep
     clip: {fileID: 8300000, guid: 3ec5cd8971d936841a519767a8886896, type: 3}
-  - name: 
+  - name: DoorOpen
+    clip: {fileID: 8300000, guid: 61bf2762763565a48a9a9388426e2614, type: 3}
+  - name: DoorClose
+    clip: {fileID: 8300000, guid: 640909ef05efee2459b0c6191019123f, type: 3}
+  - name: FlashlightOn
+    clip: {fileID: 8300000, guid: ec3cd4665b5b67f479e93a89fa66d3cb, type: 3}
+  - name: FlashlightOff
+    clip: {fileID: 8300000, guid: 23e79e9602e7bcc47b9f5f1a3c9bdd64, type: 3}
+  - name: PickUpObject
+    clip: {fileID: 0}
+  - name: ButtonClick
     clip: {fileID: 0}
 --- !u!4 &1371550015
 Transform:
@@ -10308,7 +10318,6 @@ MonoBehaviour:
   masterSlider: {fileID: 1969545657}
   sfxSlider: {fileID: 1545640121}
   musicSlider: {fileID: 884098193}
-  mainMenuSlider: {fileID: 0}
 --- !u!114 &1371550017
 MonoBehaviour:
   m_ObjectHideFlags: 0

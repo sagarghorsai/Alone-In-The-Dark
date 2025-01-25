@@ -32,13 +32,18 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        // Start playing the first background track
-        if (backgroundList.Length > 0)
+        if (backgroundList.Length > 0 && musicSource != null)
         {
             musicSource.clip = backgroundList[0].clip;
-          //  musicSource.Play();
+            musicSource.Play();
+            Debug.Log($"Playing background music: {backgroundList[0].name} at volume {musicSource.volume}");
+        }
+        else
+        {
+            Debug.LogWarning("No background music found or musicSource is not assigned.");
         }
     }
+
 
     public void PlayMusic(string audioName)
     {

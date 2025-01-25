@@ -9,15 +9,11 @@ Shader "MK4/PBR_second_UV"
 		_MetallicGloss("Metallic Gloss", 2D) = "black" {}
 		_Normalmap("Normalmap", 2D) = "bump" {}
 		_Normalstr("Normal str", Range( 0 , 1)) = 0.5
-		_AO("AO", 2D) = "white" {}
-		_AOsecondUV("AO second UV", 2D) = "white" {}
-		_AOstr("AO str", Range( 0 , 1)) = 0.5
 		_Detail("Detail", 2D) = "gray" {}
 		_Detailpower("Detail power", Range( 0 , 1)) = 0.5
 		_DetailNormalmap("Detail Normalmap", 2D) = "bump" {}
 		_DetailNormalstr("Detail Normal str", Range( 0 , 1)) = 0.5
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
-		[HideInInspector] _texcoord2( "", 2D ) = "white" {}
 
 		[HideInInspector] _RenderQueueType("Render Queue Type", Float) = 1
 		[HideInInspector][ToggleUI] _AddPrecomputedVelocity("Add Precomputed Velocity", Float) = 1
@@ -451,12 +447,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -524,8 +517,6 @@ Shader "MK4/PBR_second_UV"
 			sampler2D _Normalmap;
 			sampler2D _DetailNormalmap;
 			sampler2D _MetallicGloss;
-			sampler2D _AO;
-			sampler2D _AOsecondUV;
 
 
             #ifdef DEBUG_DISPLAY
@@ -1012,14 +1003,6 @@ Shader "MK4/PBR_second_UV"
 				float desaturateDot4 = dot( desaturateInitialColor4, float3( 0.299, 0.587, 0.114 ));
 				float3 desaturateVar4 = lerp( desaturateInitialColor4, desaturateDot4.xxx, 0.0 );
 				
-				float2 uv_AO = packedInput.ase_texcoord6.xy * _AO_ST.xy + _AO_ST.zw;
-				float2 uv1_AOsecondUV = packedInput.uv1.xy * _AOsecondUV_ST.xy + _AOsecondUV_ST.zw;
-				float3 desaturateInitialColor12 = ( tex2D( _AO, uv_AO ) * tex2D( _AOsecondUV, uv1_AOsecondUV ) ).rgb;
-				float desaturateDot12 = dot( desaturateInitialColor12, float3( 0.299, 0.587, 0.114 ));
-				float3 desaturateVar12 = lerp( desaturateInitialColor12, desaturateDot12.xxx, 0.0 );
-				float3 temp_cast_6 = ((1.2 + (_AOstr - 0.0) * (-1.2 - 1.2) / (1.0 - 0.0))).xxx;
-				float3 clampResult32 = clamp( (temp_cast_6 + (desaturateVar12 - float3( 0,0,0 )) * (float3( 1,0,0 ) - temp_cast_6) / (float3( 1,0,0 ) - float3( 0,0,0 ))) , float3( 0,0,0 ) , float3( 1,0,0 ) );
-				
 				surfaceDescription.BaseColor = clampResult25.rgb;
 				surfaceDescription.Normal = normalizeResult7;
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
@@ -1030,7 +1013,7 @@ Shader "MK4/PBR_second_UV"
 				surfaceDescription.Specular = 0;
 				#endif
 
-				surfaceDescription.Emission = clampResult32;
+				surfaceDescription.Emission = 0;
 				surfaceDescription.Smoothness = tex2DNode2.a;
 				surfaceDescription.Occlusion = 1;
 				surfaceDescription.Alpha = 1;
@@ -1217,12 +1200,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -1290,8 +1270,6 @@ Shader "MK4/PBR_second_UV"
 			sampler2D _Normalmap;
 			sampler2D _DetailNormalmap;
 			sampler2D _MetallicGloss;
-			sampler2D _AO;
-			sampler2D _AOsecondUV;
 
 
             #ifdef DEBUG_DISPLAY
@@ -1594,7 +1572,9 @@ Shader "MK4/PBR_second_UV"
 				UNITY_TRANSFER_INSTANCE_ID(inputMesh, output);
 
 				output.ase_texcoord2.xy = inputMesh.uv0.xy;
-				output.ase_texcoord2.zw = inputMesh.uv1.xy;
+				
+				//setting value to unused interpolator channels and avoid initialization warnings
+				output.ase_texcoord2.zw = 0;
 
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 				float3 defaultVertexValue = inputMesh.positionOS.xyz;
@@ -1770,14 +1750,6 @@ Shader "MK4/PBR_second_UV"
 				float desaturateDot4 = dot( desaturateInitialColor4, float3( 0.299, 0.587, 0.114 ));
 				float3 desaturateVar4 = lerp( desaturateInitialColor4, desaturateDot4.xxx, 0.0 );
 				
-				float2 uv_AO = packedInput.ase_texcoord2.xy * _AO_ST.xy + _AO_ST.zw;
-				float2 uv1_AOsecondUV = packedInput.ase_texcoord2.zw * _AOsecondUV_ST.xy + _AOsecondUV_ST.zw;
-				float3 desaturateInitialColor12 = ( tex2D( _AO, uv_AO ) * tex2D( _AOsecondUV, uv1_AOsecondUV ) ).rgb;
-				float desaturateDot12 = dot( desaturateInitialColor12, float3( 0.299, 0.587, 0.114 ));
-				float3 desaturateVar12 = lerp( desaturateInitialColor12, desaturateDot12.xxx, 0.0 );
-				float3 temp_cast_6 = ((1.2 + (_AOstr - 0.0) * (-1.2 - 1.2) / (1.0 - 0.0))).xxx;
-				float3 clampResult32 = clamp( (temp_cast_6 + (desaturateVar12 - float3( 0,0,0 )) * (float3( 1,0,0 ) - temp_cast_6) / (float3( 1,0,0 ) - float3( 0,0,0 ))) , float3( 0,0,0 ) , float3( 1,0,0 ) );
-				
 				surfaceDescription.BaseColor = clampResult25.rgb;
 				surfaceDescription.Normal = normalizeResult7;
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
@@ -1788,7 +1760,7 @@ Shader "MK4/PBR_second_UV"
 				surfaceDescription.Specular = 0;
 				#endif
 
-				surfaceDescription.Emission = clampResult32;
+				surfaceDescription.Emission = 0;
 				surfaceDescription.Smoothness = tex2DNode2.a;
 				surfaceDescription.Occlusion = 1;
 				surfaceDescription.Alpha = 1;
@@ -1968,12 +1940,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -2595,12 +2564,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -3196,12 +3162,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -3882,12 +3845,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -4649,12 +4609,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -4722,8 +4679,6 @@ Shader "MK4/PBR_second_UV"
 			sampler2D _Normalmap;
 			sampler2D _DetailNormalmap;
 			sampler2D _MetallicGloss;
-			sampler2D _AO;
-			sampler2D _AOsecondUV;
 
 
             #ifdef DEBUG_DISPLAY
@@ -5317,14 +5272,6 @@ Shader "MK4/PBR_second_UV"
 				float desaturateDot4 = dot( desaturateInitialColor4, float3( 0.299, 0.587, 0.114 ));
 				float3 desaturateVar4 = lerp( desaturateInitialColor4, desaturateDot4.xxx, 0.0 );
 				
-				float2 uv_AO = packedInput.ase_texcoord8.xy * _AO_ST.xy + _AO_ST.zw;
-				float2 uv1_AOsecondUV = packedInput.uv1.xy * _AOsecondUV_ST.xy + _AOsecondUV_ST.zw;
-				float3 desaturateInitialColor12 = ( tex2D( _AO, uv_AO ) * tex2D( _AOsecondUV, uv1_AOsecondUV ) ).rgb;
-				float desaturateDot12 = dot( desaturateInitialColor12, float3( 0.299, 0.587, 0.114 ));
-				float3 desaturateVar12 = lerp( desaturateInitialColor12, desaturateDot12.xxx, 0.0 );
-				float3 temp_cast_6 = ((1.2 + (_AOstr - 0.0) * (-1.2 - 1.2) / (1.0 - 0.0))).xxx;
-				float3 clampResult32 = clamp( (temp_cast_6 + (desaturateVar12 - float3( 0,0,0 )) * (float3( 1,0,0 ) - temp_cast_6) / (float3( 1,0,0 ) - float3( 0,0,0 ))) , float3( 0,0,0 ) , float3( 1,0,0 ) );
-				
 				surfaceDescription.BaseColor = clampResult25.rgb;
 				surfaceDescription.Normal = normalizeResult7;
 				surfaceDescription.BentNormal = float3( 0, 0, 1 );
@@ -5335,7 +5282,7 @@ Shader "MK4/PBR_second_UV"
 				surfaceDescription.Specular = 0;
 				#endif
 
-				surfaceDescription.Emission = clampResult32;
+				surfaceDescription.Emission = 0;
 				surfaceDescription.Smoothness = tex2DNode2.a;
 				surfaceDescription.Occlusion = 1;
 				surfaceDescription.Alpha = 1;
@@ -5611,12 +5558,9 @@ Shader "MK4/PBR_second_UV"
 			float4 _Normalmap_ST;
 			float4 _DetailNormalmap_ST;
 			float4 _MetallicGloss_ST;
-			float4 _AO_ST;
-			float4 _AOsecondUV_ST;
 			float _Detailpower;
 			float _Normalstr;
 			float _DetailNormalstr;
-			float _AOstr;
 			float4 _EmissionColor;
 			float _AlphaCutoff;
 			float _RenderQueueType;
@@ -6388,7 +6332,6 @@ WireConnection;32;0;31;0
 WireConnection;34;0;25;0
 WireConnection;34;1;7;0
 WireConnection;34;4;4;0
-WireConnection;34;6;32;0
 WireConnection;34;7;2;4
 ASEEND*/
-//CHKSM=B250E4A9E7269269B1B131812D1914E0C76210C8
+//CHKSM=F29C648FC360646297C0943F1284CB9A23761983
