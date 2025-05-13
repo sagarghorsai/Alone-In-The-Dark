@@ -26,7 +26,7 @@ public class MenuLogic : MonoBehaviour
     public void StartButton()
     {
         loadingMenu?.SetActive(true); // Show loading screen if assigned
-        SceneManager.LoadScene("Level");
+        SceneManager.LoadScene("Test");
     }
 
     // Display the options menu

@@ -2,44 +2,46 @@ using UnityEngine;
 
 public class Door : MonoBehaviour, IInteractable
 {
-    private Animator animator;
-    public bool isOpen = false;
-    public InteractType interactType; // Set this in the Inspector for each object
+	private Animator animator;
+	public bool isOpen = false;
+	public InteractType interactType; // Set in the Inspector for the door's interaction type
 
-    public string DoorOpenSFX = "DoorOpen"; // Name of the SFX for opening the door
-    public string DoorCloseSFX = "DoorClose"; // Name of the SFX for closing the door
+	[Header("Sound FX")]
+	public string DoorOpenSFX = "DoorOpen";   // SFX for opening the door
+	public string DoorCloseSFX = "DoorClose"; // SFX for closing the door
 
-    string txt = "";
+	private void Start()
+	{
+		animator = GetComponent<Animator>();
+	}
 
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
+	public void Interact()
+	{
+		isOpen = !isOpen;
+		animator.SetBool("Open", isOpen);
 
-    public void Interact()
-    {
-        isOpen = !isOpen; // Toggle the state of the door
-        animator.SetBool("Open", isOpen);
+		if (isOpen)
+		{
+			AudioManager.Instance?.PlaySFX(DoorOpenSFX); // Play door open sound
+			RoomManager.Instance.SpawnRandomRoom();
 
-        // Play the appropriate SFX
-        if (isOpen)
-        {
-            AudioManager.Instance.PlaySFX(DoorOpenSFX);
-        }
-        else
-        {
-            AudioManager.Instance.PlaySFX(DoorCloseSFX);
-        }
-    }
+			// Trigger camera shake
+			CameraShake.Instance?.TriggerShake();
+		}
+		else
+		{
+			AudioManager.Instance?.PlaySFX(DoorCloseSFX); // Play door close sound
+		}
+	}
 
-    public string GetInteractionText()
-    {
-        txt = isOpen ? "Close" : "Open";
-        return interactType == InteractType.Hold ? $"{txt} Door" : $"{txt} Door";
-    }
 
-    public InteractType GetInteractType()
-    {
-        return interactType; // Return the interact type for this object
-    }
+	public string GetInteractionText()
+	{
+		return isOpen ? "Close Door" : "Open Door";
+	}
+
+	public InteractType GetInteractType()
+	{
+		return interactType;
+	}
 }
