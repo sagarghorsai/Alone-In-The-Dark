@@ -10261,6 +10261,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSource: {fileID: 1011704119}
   sfxSource: {fileID: 1315854979}
+  audioMixer: {fileID: 24100000, guid: d13314c57bb294b47a7a4d86556a3832, type: 2}
+  normalSnapshot: {fileID: 24500006, guid: d13314c57bb294b47a7a4d86556a3832, type: 2}
+  tensionSnapshot: {fileID: 24500006, guid: d13314c57bb294b47a7a4d86556a3832, type: 2}
+  snapshotTransitionTime: 1
   backgroundList:
   - name: Menu
     clip: {fileID: 8300000, guid: 7ec42203487d10a4e84147f8f71604d1, type: 3}
@@ -10277,7 +10281,7 @@ MonoBehaviour:
   - name: WoodStep
     clip: {fileID: 8300000, guid: 3ec5cd8971d936841a519767a8886896, type: 3}
   - name: DoorOpen
-    clip: {fileID: 8300000, guid: 61bf2762763565a48a9a9388426e2614, type: 3}
+    clip: {fileID: 8300000, guid: ddaa9aa9bc67f5e4890909f1f7a9579e, type: 3}
   - name: DoorClose
     clip: {fileID: 8300000, guid: 640909ef05efee2459b0c6191019123f, type: 3}
   - name: FlashlightOn
@@ -10285,8 +10289,6 @@ MonoBehaviour:
   - name: FlashlightOff
     clip: {fileID: 8300000, guid: 23e79e9602e7bcc47b9f5f1a3c9bdd64, type: 3}
   - name: PickUpObject
-    clip: {fileID: 0}
-  - name: ButtonClick
     clip: {fileID: 0}
 --- !u!4 &1371550015
 Transform:
